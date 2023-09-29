@@ -1,7 +1,6 @@
 package org.example.model.repository;
 
 import java.util.List;
-
 import org.example.model.domain.Product;
 
 public interface StockDAO {
