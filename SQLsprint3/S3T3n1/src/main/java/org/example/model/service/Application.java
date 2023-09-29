@@ -9,18 +9,9 @@ public class Application {
     static Scanner sc = new Scanner(System.in);
     static FlowerShop flowerShop = new FlowerShop("");
     static ProductFactory productFactory = new ProductFactory();
-    static WriteConnection wc = new WriteConnection();
-    static ReadConnection rc = new ReadConnection();
     
     public static void boot() {
         int option = -1;
-       
-        wc.connect();
-        flowerShop.setInvoiceLog(rc.invoiceLogReader());
-        flowerShop.setStockList(rc.stockListReader());
-        flowerShop.setTotalEarnings(rc.getTotalEarnings());
-        flowerShop.setStockTotalValue(rc.getStockTotalValue());
-        flowerShop.setProductMap(rc.getProductMap());
 
         do {
             option = menu();
@@ -69,8 +60,8 @@ public class Application {
     }
 
     public static void closeApplication(){
-    	wc.invoiceLogWriter(flowerShop.getInvoiceLog());
-    	wc.stockListWriter(flowerShop.getStockList());
+    	//wc.invoiceLogWriter(flowerShop.getInvoiceLog());
+    	//wc.stockListWriter(flowerShop.getStockList());
         System.out.println("See You Soon!");
         sc.close();
     }
@@ -78,13 +69,13 @@ public class Application {
     public static void createFlowerShop(){
         String name = "";
 
-        if(rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() & flowerShop.getName().length() < 1) {
+        if(/*rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() &*/ flowerShop.getName().length() < 1) {
             System.out.println("Introduce the flower shop name: ");
             name = sc.nextLine();
             flowerShop.setName(name);
             System.out.println("The flower-shop " + name + " was created successfully!\n");
 
-        } else if (rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() & flowerShop.getStockList().isEmpty() & flowerShop.getInvoiceLog().isEmpty()) {
+        } else if (/*rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() &*/ flowerShop.getStockList().isEmpty() & flowerShop.getInvoiceLog().isEmpty()) {
             System.out.println("You alreday have a flower-shop. Just start adding stock. Jeez...\n");
 
         } else{

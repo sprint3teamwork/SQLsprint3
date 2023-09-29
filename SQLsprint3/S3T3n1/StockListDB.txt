@@ -1,1 +1,0 @@
-Id = 3 | Name = Wood arc | Price = 45.9 | Is wood? = true | Type = Decoration
