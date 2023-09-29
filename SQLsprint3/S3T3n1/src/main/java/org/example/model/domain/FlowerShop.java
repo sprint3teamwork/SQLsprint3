@@ -1,5 +1,7 @@
 package org.example.model.domain;
 
+import org.example.model.domain.entity.Product;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

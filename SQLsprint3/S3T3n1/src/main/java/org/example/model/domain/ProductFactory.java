@@ -1,5 +1,10 @@
 package org.example.model.domain;
 
+import org.example.model.domain.entity.Decoration;
+import org.example.model.domain.entity.Flower;
+import org.example.model.domain.entity.Product;
+import org.example.model.domain.entity.Tree;
+
 public class ProductFactory {
 	
 	/*
