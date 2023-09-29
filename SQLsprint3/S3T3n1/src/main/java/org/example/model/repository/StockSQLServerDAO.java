@@ -27,6 +27,50 @@ public class StockSQLServerDAO implements StockDAO {
     private static final String UPDATE = "UPDATE users SET firstName=?, lastName=?, joinDate=?, cardId=?, email=?, password=?, phoneNumber=?, accountType=?, location=? WHERE id=?";
 	 */
 	
+	public Product checkTypeRS(ResultSet rs, Product p) throws SQLException {
+		
+		String type = rs.getString(4);
+		//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
+		
+		switch(type) {
+		case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
+		break;
+		case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
+		break;
+		case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
+		break;
+		}
+		
+		return p;
+	}
+	
+public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException {
+		
+		Product product = null; 
+		
+		ps.setInt(1, p.getId());
+        ps.setString(2, p.getName());
+        ps.setDouble(3, p.getPrice());
+        ps.setString(4, p.getType());
+        
+        switch(p.getType()) {
+        	case "Tree": Tree tree = (Tree) p; 
+        			ps.setFloat(5, tree.getHeight());
+        			product = tree;
+        	break;
+            case "Flower": Flower flower = (Flower) p;
+            		ps.setString(6, flower.getColor());
+            		product = flower;
+            break;
+            case "Decoration": Decoration decoration = (Decoration) p;
+            		ps.setBoolean(7, decoration.isMaterialIsWood());
+            		product = decoration;
+            break;
+        }
+		
+		return product;
+	}
+	
 	//this method needed to add all products on first connection?
 	//also is another constructor needed to include the invoiceID?
 	//flowershop needed to receive addstock and removestock methods?
@@ -41,23 +85,14 @@ public class StockSQLServerDAO implements StockDAO {
 			PreparedStatement ps = newConnect.prepareStatement(prompt);
 			ResultSet rs = ps.executeQuery()
 			) {
-				while (rs.next()) {
-					Product p = new Product();
-					String type = rs.getString(4);
-					//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
-					
-					switch(type) {
-					case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-					break;
-					case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-					break;
-					case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-					break;
-					}
-					stockList.add(p);
-					//flowerShopp.setStockValue += p.getprice when?
-					//flowerShopp.putProductMap put.p
-				}				
+			
+			while (rs.next()) {
+				Product p = null;
+				p = checkTypeRS(rs,p);
+				stockList.add(p);
+				//flowerShopp.setStockValue += p.getprice when?
+				//flowerShopp.putProductMap put.p
+			}				
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		} 
@@ -72,22 +107,14 @@ public class StockSQLServerDAO implements StockDAO {
 		
 		String prompt = "SELECT * FROM stockList where id = " + id + ";";
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			rs.next();
 			
-			String type = rs.getString(4);
-			//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
+			p = checkTypeRS(rs,p);
 			
-			switch(type) {
-			case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-			break;
-			case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-			break;
-			case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-			break;
-			}
 		}catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
@@ -102,22 +129,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where name = " + name + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
-
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -137,22 +156,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where price = " + price + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
-
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -172,22 +183,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where type = " + productType + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
 
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -207,22 +210,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where height = " + height + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
 
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -242,22 +237,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where height = " + color + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
 
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -277,22 +264,14 @@ public class StockSQLServerDAO implements StockDAO {
 		String prompt = "SELECT * FROM stockList where material_is_wood = " + material + ";";
 
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			ResultSet rs = ps.executeQuery()
+			) {
+			
 			while (rs.next()) {
-				Product p = new Product();
-				String type = rs.getString(4);
-				//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
 
-				switch(type) {
-				case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
-				break;
-				case "Flower": p = new Flower(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(6));
-				break;
-				case "Decoration": p = new Decoration(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getBoolean(7));
-				break;
-				}
+				Product p = null;
+				p = checkTypeRS(rs,p);
 				stockList.add(p);
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
@@ -311,35 +290,16 @@ public class StockSQLServerDAO implements StockDAO {
 				+ "type, height, color, material_is_wood, invoice_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			) {
 			
-			ps.setInt(1, p.getId());
-            ps.setString(2, p.getName());
-            ps.setDouble(3, p.getPrice());
-            ps.setString(4, p.getType());
-            
-            switch(p.getType()) {
-            	case "Tree": Tree tree = (Tree) p; 
-            			ps.setFloat(5, tree.getHeight());
-            			p = tree;
-            	break;
-	            case "Flower": Flower flower = (Flower) p;
-	            		ps.setString(6, flower.getColor());
-	            		p = flower;
-	            break;
-	            case "Decoration": Decoration decoration = (Decoration) p;
-	            		ps.setBoolean(7, decoration.isMaterialIsWood());
-	            		p = decoration;
-	            break;
-            }
+			Product product = checkTypePS(ps, p);
                         
             //ps.setInt(8, p.getInvoiceId());			//to be applied still
 
             ps.executeUpdate();
   
-            System.out.println("Product with following details was saved in DB: " + p.toString());
+            System.out.println("Product with following details was saved in DB: " + product.toString());
 			
             return true;
 		}catch (SQLException sqle) {
@@ -353,35 +313,16 @@ public class StockSQLServerDAO implements StockDAO {
 		
 		String prompt = "UPDATE stockList SET product_id=?, name=?, price=?, type=?, height=?, color=?, material_is_wood=?, invoice_id=? WHERE product_id=?";
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			) {
 			
-			ps.setInt(1, p.getId());
-            ps.setString(2, p.getName());
-            ps.setDouble(3, p.getPrice());
-            ps.setString(4, p.getType());
-            
-            switch(p.getType()) {
-            	case "Tree": Tree tree = (Tree) p; 
-            			ps.setFloat(5, tree.getHeight());
-            			p = tree;
-            	break;
-	            case "Flower": Flower flower = (Flower) p;
-	            		ps.setString(6, flower.getColor());
-	            		p = flower;
-	            break;
-	            case "Decoration": Decoration decoration = (Decoration) p;
-	            		ps.setBoolean(7, decoration.isMaterialIsWood());
-	            		p = decoration;
-	            break;
-            }
+			Product product = checkTypePS(ps, p);
             
           //ps.setInt(8, p.getInvoiceId());			//to be applied still
             
             ps.executeUpdate();
        
-            System.out.println("User with id " + p.getId() + " was updated in DB with following details: " + p.toString());
+            System.out.println("User with id " + product.getId() + " was updated in DB with following details: " + product.toString());
 
             return true;
 		}catch (SQLException sqle) {
@@ -394,14 +335,12 @@ public class StockSQLServerDAO implements StockDAO {
 	public boolean deleteProduct(int id) {
 		String prompt = "DELETE FROM stockList WHERE product_id=?";
 		try(Connection newConnect = DatabaseConnection.getConnection();
-				PreparedStatement ps = newConnect.prepareStatement(prompt);
-				ResultSet rs = ps.executeQuery()
-				) {
+			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			) {
 			
 			ps.setInt(1, id);
 
             ps.executeUpdate();
-            ps.close();
 
             System.out.println("Product with id: " + id + " was sucesfully deleted from DB.");
 			
