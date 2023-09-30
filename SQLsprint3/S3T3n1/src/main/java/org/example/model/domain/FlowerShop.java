@@ -1,6 +1,8 @@
 package org.example.model.domain;
 
 import org.example.model.domain.entity.Product;
+import org.example.model.repository.DBInteraction;
+import org.example.model.repository.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,4 +113,5 @@ public class FlowerShop {
     public void showInvoiceList() {
         invoiceLog.forEach(System.out::println);
     }
+
 }

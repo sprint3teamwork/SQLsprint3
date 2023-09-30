@@ -12,17 +12,24 @@ public class Invoice {
 	private double totalSale = 0.0;
 	private String loadedProductList = "";
 
+	public Invoice() {
+		id = idNextNumber;
+		idNextNumber++;
+		productList = new ArrayList();
+	}
+
+	public Invoice(int id, double totalSale){
+		this.id = id;
+		this.totalSale = totalSale;
+		this.productList = new ArrayList();
+	}
+
 	public Invoice(int id, String loadedProductList, double totalSale){
 		this.id = id;
 		idNextNumber = id +1;
 		this.loadedProductList = loadedProductList;
 		this.totalSale = totalSale;
 
-	}
-	public Invoice() {
-		id = idNextNumber;
-		idNextNumber++;
-		productList = new ArrayList();
 	}
 
 	public List<Product> getProductList() {
@@ -36,7 +43,11 @@ public class Invoice {
 	public int getId() {
 		return id;
 	}
-	
+
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
+	}
+
 	public void addProduct(Product p) {
 
 		productList.add(p);
@@ -49,6 +60,10 @@ public class Invoice {
 			totalSale -= p.getPrice();
 		}
 	}
+
+	/*public void loadProducts(List<Product> invoiceProducts){
+		this.productList = invoiceProducts;
+	}*/
 
 	public String toString() {
 

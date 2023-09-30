@@ -1,18 +1,25 @@
 package org.example.model.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.example.model.domain.*;
 import org.example.model.domain.entity.Product;
+import org.example.model.repository.DBInteraction;
 
 public class Application {
 	
     static Scanner sc = new Scanner(System.in);
     static FlowerShop flowerShop = new FlowerShop("");
     static ProductFactory productFactory = new ProductFactory();
+    static DBInteraction db = new DBInteraction();
     
     public static void boot() {
         int option = -1;
+
+        db.tablesInitializer();
+        loadData();
 
         do {
             option = menu();
@@ -60,9 +67,32 @@ public class Application {
         return option;
     }
 
+    public static void loadData(){
+        List<Product> stockList = db.getStockData();
+        List<Invoice> invoiceList = db.getInvoiceData();
+
+        for (Product product : stockList){
+            flowerShop.addStock(product);
+        }
+        for (Invoice invoice : invoiceList){
+            invoice.setProductList(loadInvoiceProducts(invoice.getId()));
+            flowerShop.addInvoice(invoice);
+        }
+    }
+
+    public static List<Product> loadInvoiceProducts(int invoiceId){
+        List<Product> soldProducts = db.getProductsSoldData();
+        List<Product> invoiceProducts = new ArrayList<>();
+
+        for (Product product : soldProducts){
+            if(product.getInvoiceId() == invoiceId){
+                invoiceProducts.add(product);
+            }
+        }
+        return invoiceProducts;
+    }
+
     public static void closeApplication(){
-    	//wc.invoiceLogWriter(flowerShop.getInvoiceLog());
-    	//wc.stockListWriter(flowerShop.getStockList());
         System.out.println("See You Soon!");
         sc.close();
     }
@@ -70,13 +100,13 @@ public class Application {
     public static void createFlowerShop(){
         String name = "";
 
-        if(/*rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() &*/ flowerShop.getName().length() < 1) {
+        if(db.stockDataIsEmpty() & flowerShop.getName().length() < 1) {
             System.out.println("Introduce the flower shop name: ");
             name = sc.nextLine();
             flowerShop.setName(name);
             System.out.println("The flower-shop " + name + " was created successfully!\n");
 
-        } else if (/*rc.stockListDBIsEmpty() & rc.invoiceLogDBIsEmpty() &*/ flowerShop.getStockList().isEmpty() & flowerShop.getInvoiceLog().isEmpty()) {
+        } else if (db.stockDataIsEmpty() & flowerShop.getStockList().isEmpty() & flowerShop.getInvoiceLog().isEmpty()) {
             System.out.println("You alreday have a flower-shop. Just start adding stock. Jeez...\n");
 
         } else{
@@ -134,6 +164,7 @@ public class Application {
             if (flowerShop.getStockList().get(listIndex) != null) {
                 Product product = flowerShop.getStockList().get(listIndex);
                 flowerShop.removeStock(flowerShop.getStockList().get(listIndex));
+                db.removeTree(product);
                 System.out.println("The item '" + product.getName() + "' has been removed from the list.\n");
             } else {
                 System.out.println("The tree with Id# " + id + " does not exist.\n");
@@ -152,6 +183,7 @@ public class Application {
             if (flowerShop.getStockList().get(listIndex) != null) {
                 Product product = flowerShop.getStockList().get(listIndex);
                 flowerShop.removeStock(flowerShop.getStockList().get(listIndex));
+                db.removeFlower(product);
                 System.out.println("The item '" + product.getName() + "' has been removed from the list.\n");
             } else {
                 System.out.println("The flower with Id# " + id + " does not exist.\n");
@@ -170,6 +202,7 @@ public class Application {
             if (flowerShop.getStockList().get(listIndex) != null) {
                 Product product = flowerShop.getStockList().get(listIndex);
                 flowerShop.removeStock(flowerShop.getStockList().get(listIndex));
+                db.removeDecoration(product);
                 System.out.println("The item '" + product.getName() + "' has been removed from the list.\n");
             } else {
                 System.out.println("The decoration with Id# " + id + " does not exist.\n");
@@ -220,6 +253,7 @@ public class Application {
         sc.nextLine();
         Product p = productFactory.createProduct("Tree",name,price,height);
         flowerShop.addStock(p);
+        db.insertTree(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
     public static void addFlower(){
@@ -236,6 +270,7 @@ public class Application {
         color = sc.nextLine();
         Product p = productFactory.createProduct("Flower",name,price,color);
         flowerShop.addStock(p);
+        db.insertFlower(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
     public static void addDecoration(){
@@ -254,6 +289,7 @@ public class Application {
         isWood = option == 1;//if option == 1,isWood = true, if not is plastic
         Product p = productFactory.createProduct("Decoration",name,price,isWood);
         flowerShop.addStock(p);
+        db.insertDecoration(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
 
@@ -298,6 +334,7 @@ public class Application {
 
         if (invoice.getProductList().size() > 0){
             flowerShop.setTotalEarnings(flowerShop.getTotalEarnings() + invoice.getTotalSale());
+            db.insertInvoice(invoice);
             System.out.println("\nRECEIPT:");
             System.out.println(invoice.toString() + "\nInvoice archived.\n");
         }else {
