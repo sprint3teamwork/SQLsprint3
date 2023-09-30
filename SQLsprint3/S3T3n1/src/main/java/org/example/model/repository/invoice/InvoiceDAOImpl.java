@@ -10,8 +10,8 @@ import java.sql.SQLException;
 
 public class InvoiceDAO {
     public static void insertInvoice(Invoice invoice) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection()){
+
             String insertInvoiceSQL = "INSERT INTO invoices (id, Total Sale) VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(insertInvoiceSQL);
             statement.setInt(1, invoice.getId()); // Manually set the invoice ID
