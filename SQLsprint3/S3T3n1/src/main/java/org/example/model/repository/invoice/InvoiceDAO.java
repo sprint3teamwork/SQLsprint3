@@ -1,11 +1,11 @@
-package org.example.model.repository;
+package org.example.model.repository.invoice;
 
 import org.example.model.domain.Invoice;
-import org.example.model.domain.Product;
+import org.example.model.domain.entity.Product;
+import org.example.model.repository.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InvoiceDAO {
