@@ -3,6 +3,7 @@ package org.example.model.service;
 import java.util.Scanner;
 
 import org.example.model.domain.*;
+import org.example.model.domain.entity.Product;
 
 public class Application {
 	
