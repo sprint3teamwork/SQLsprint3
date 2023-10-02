@@ -8,14 +8,14 @@ import java.sql.SQLException;
 public class InvoicesTableInitialization {
     public static void createTable() {
         try (Connection connection = DatabaseConnection.getConnection()){
-            String createInvoiceTableSQL = "CREATE SCHEMA IF NOT EXISTS `flowerShop` "
-                    + "DEFAULT CHARACTER SET utf8 ;"
-                    + "USE `flowerShop` ;"
-                    + "CREATE TABLE IF NOT EXISTS invoices ("
-                    + "id INT PRIMARY KEY, "
-                    + "Total Sale DECIMAL(10, 2) NOT NULL"
-                    + ")";
-            connection.createStatement().executeUpdate(createInvoiceTableSQL);
+            String createInvoiceTableSQL = "CREATE SCHEMA IF NOT EXISTS `flowerShop` DEFAULT CHARACTER SET utf8";
+            String useSchemaSQL = "USE `flowerShop`";
+            String createInvoicesTableSQL = "CREATE TABLE IF NOT EXISTS `invoices` ("
+                    + " `id` INT PRIMARY KEY,"
+                    + " `Total_Sale` DECIMAL(10, 2) NOT NULL)";
+            connection.createStatement().execute(createInvoiceTableSQL);
+            connection.createStatement().execute(useSchemaSQL);
+            connection.createStatement().execute(createInvoicesTableSQL);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -12,7 +12,7 @@ import java.util.List;
 public class InvoiceDAOImpl implements InvoiceDAO {
     public void insertInvoice(Invoice invoice) {
         try (Connection connection = DatabaseConnection.getConnection()) {
-            String insertInvoiceSQL = "INSERT INTO invoices (id, totalSale) VALUES (?, ?)";
+            String insertInvoiceSQL = "INSERT INTO `flowershop`.`invoices` (id, Total_Sale) VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(insertInvoiceSQL);
             statement.setInt(1, invoice.getId());
             statement.setDouble(2, invoice.getTotalSale());
@@ -29,7 +29,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
 
     public List<Invoice> invoicesRetriever() {
         List<Invoice> invoceLog = new ArrayList<>();
-        String query = "SELECT id AS invoice_id, totalSale AS invoice_totalSale FROM invoices";
+        String query = "SELECT id AS invoice_id, Total_Sale AS invoice_totalSale FROM flowershop.invoices";
 
         try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement();

@@ -21,24 +21,24 @@ public class StockSQLServerDAO implements StockDAO {
 	 * private static final String AUTHENTICATE = "SELECT * FROM users WHERE email=? and password=?";
     private static final String TRUNCATE = "TRUNCATE users";
 	 */
-	private static final String FIND_ALL = "SELECT * FROM stockList"; 
-	private static final String FIND_BY_ID = "SELECT * FROM stockList WHERE id=?";
-	private static final String FIND_BY_NAME = "SELECT * FROM stockList WHERE name=?";
-	private static final String FIND_BY_PRICE = "SELECT * FROM stockList WHERE price=?";
-	private static final String FIND_BY_TYPE = "SELECT * FROM stockList WHERE type=?";
-	private static final String FIND_BY_HEIGHT = "SELECT * FROM stockList WHERE height=?";
-	private static final String FIND_BY_COLOR = "SELECT * FROM stockList WHERE color=?";
-	private static final String FIND_BY_MATERIAL = "SELECT * FROM stockList WHERE material_is_wood=?";
-    private static final String INSERT = "INSERT INTO stockList (product_id, name, price,"
+	private static final String FIND_ALL = "SELECT * FROM flowershop.stockList";
+	private static final String FIND_BY_ID = "SELECT * FROM flowershop.stockList WHERE id=?";
+	private static final String FIND_BY_NAME = "SELECT * FROM flowershop.stockList WHERE name=?";
+	private static final String FIND_BY_PRICE = "SELECT * FROM flowershop.stockList WHERE price=?";
+	private static final String FIND_BY_TYPE = "SELECT * FROM flowershop.stockList WHERE type=?";
+	private static final String FIND_BY_HEIGHT = "SELECT * FROM flowershop.stockList WHERE height=?";
+	private static final String FIND_BY_COLOR = "SELECT * FROM flowershop.stockList WHERE color=?";
+	private static final String FIND_BY_MATERIAL = "SELECT * FROM flowershop.stockList WHERE material_is_wood=?";
+    private static final String INSERT = "INSERT INTO flowershop.stockList (product_id, name, price,"
     + "type, height, color, material_is_wood, invoice_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = "UPDATE stockList SET product_id=?, name=?, price=?, "
+    private static final String UPDATE = "UPDATE flowershop.stockList SET product_id=?, name=?, price=?, "
     + "type=?, height=?, color=?, material_is_wood=?, invoice_id=? WHERE product_id=?";
-    private static final String DELETE = "DELETE FROM stockList WHERE product_id=?";
+    private static final String DELETE = "DELETE FROM flowershop.stockList WHERE product_id=?";
 	
 	public Product checkTypeRS(ResultSet rs, Product p) throws SQLException {
 		
 		String type = rs.getString(4);
-		//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
+		p.setInvoiceId(rs.getInt(8));	//need this variable		//or string param invoice_id
 		
 		switch(type) {
 		case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
@@ -60,10 +60,19 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
         ps.setString(2, p.getName());
         ps.setDouble(3, p.getPrice());
         ps.setString(4, p.getType());
+
+		if(p.getInvoiceId() == 0){
+			ps.setInt(8,0);
+		}else{
+			ps.setInt(8,p.getInvoiceId());
+		}
+
         
         switch(p.getType()) {
         	case "Tree": Tree tree = (Tree) p; 
         			ps.setFloat(5, tree.getHeight());
+					ps.setString(6,null);
+					ps.setString(7,"false");
         			product = tree;
         	break;
             case "Flower": Flower flower = (Flower) p;
@@ -286,8 +295,6 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 			) {
 			
 			Product product = checkTypePS(ps, p);
-                        
-            //ps.setInt(8, p.getInvoiceId());			//to be applied still
 
             ps.executeUpdate();
   

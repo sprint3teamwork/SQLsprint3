@@ -9,12 +9,12 @@ import org.example.model.domain.entity.Product;
 import org.example.model.repository.DBInteraction;
 
 public class Application {
-	
+
     static Scanner sc = new Scanner(System.in);
     static FlowerShop flowerShop = new FlowerShop("");
     static ProductFactory productFactory = new ProductFactory();
     static DBInteraction db = new DBInteraction();
-    
+
     public static void boot() {
         int option = -1;
 
@@ -23,7 +23,7 @@ public class Application {
 
         do {
             option = menu();
-            switch(option) {
+            switch (option) {
                 case 0 -> closeApplication();
                 case 1 -> createFlowerShop();
                 case 2 -> addTree();
@@ -35,11 +35,11 @@ public class Application {
                 case 8 -> removeDecoration();
                 case 9 -> printStockQuantities();
                 case 10 -> printStockTotalValue();
-                case 11 -> startBuy();
+                case 11 -> buy();
                 case 12 -> invoiceLog();
                 case 13 -> printTotalEarnings();
             }
-        }while(option != 0);
+        } while (option != 0);
 
     }
 
@@ -59,7 +59,7 @@ public class Application {
         option = sc.nextInt();
         sc.nextLine();
 
-        while(option < 0 || option > 13) {
+        while (option < 0 || option > 13) {
             System.out.print("The number introduced isn't supported.\nTry again: ");
             option = sc.nextInt();
             sc.nextLine();
@@ -67,40 +67,40 @@ public class Application {
         return option;
     }
 
-    public static void loadData(){
+    public static void loadData() {
         List<Product> stockList = db.getStockData();
         List<Invoice> invoiceList = db.getInvoiceData();
 
-        for (Product product : stockList){
+        for (Product product : stockList) {
             flowerShop.addStock(product);
         }
-        for (Invoice invoice : invoiceList){
+        for (Invoice invoice : invoiceList) {
             invoice.setProductList(loadInvoiceProducts(invoice.getId()));
             flowerShop.addInvoice(invoice);
         }
     }
 
-    public static List<Product> loadInvoiceProducts(int invoiceId){
+    public static List<Product> loadInvoiceProducts(int invoiceId) {
         List<Product> soldProducts = db.getProductsSoldData();
         List<Product> invoiceProducts = new ArrayList<>();
 
-        for (Product product : soldProducts){
-            if(product.getInvoiceId() == invoiceId){
+        for (Product product : soldProducts) {
+            if (product.getInvoiceId() == invoiceId) {
                 invoiceProducts.add(product);
             }
         }
         return invoiceProducts;
     }
 
-    public static void closeApplication(){
+    public static void closeApplication() {
         System.out.println("See You Soon!");
         sc.close();
     }
 
-    public static void createFlowerShop(){
+    public static void createFlowerShop() {
         String name = "";
 
-        if(db.stockDataIsEmpty() & flowerShop.getName().length() < 1) {
+        if (db.stockDataIsEmpty() & flowerShop.getName().length() < 1) {
             System.out.println("Introduce the flower shop name: ");
             name = sc.nextLine();
             flowerShop.setName(name);
@@ -109,7 +109,7 @@ public class Application {
         } else if (db.stockDataIsEmpty() & flowerShop.getStockList().isEmpty() & flowerShop.getInvoiceLog().isEmpty()) {
             System.out.println("You alreday have a flower-shop. Just start adding stock. Jeez...\n");
 
-        } else{
+        } else {
             System.out.println("You already created a flower-shop, you greedy bastard! Press 5 and you'll see the records\n");
         }
 
@@ -126,7 +126,7 @@ public class Application {
         return index;
     }
 
-    public static int searchStock(int id){
+    public static int searchStock(int id) {
         int counter = 0;
         int index = -1;
 
@@ -140,7 +140,7 @@ public class Application {
         return index;
     }
 
-    public static int searchInvoiceLog(int id){
+    public static int searchInvoiceLog(int id) {
         int counter = 0;
         int index = -1;
 
@@ -155,9 +155,9 @@ public class Application {
     }
 
     public static void removeTree() {
-        if(flowerShop.getProductMap().get("Tree") == 0){
+        if (flowerShop.getProductMap().get("Tree") == 0) {
             System.out.println("There are no trees in stock.\n");
-        }else {
+        } else {
             int id = removerPrompt("Tree");
             int listIndex = searchList(id, "product");
 
@@ -174,9 +174,9 @@ public class Application {
     }
 
     public static void removeFlower() {
-        if(flowerShop.getProductMap().get("Flower") == 0){
+        if (flowerShop.getProductMap().get("Flower") == 0) {
             System.out.println("There are no flowers in stock.\n");
-        }else {
+        } else {
             int id = removerPrompt("Flower");
             int listIndex = searchList(id, "product");
 
@@ -193,9 +193,9 @@ public class Application {
     }
 
     public static void removeDecoration() {
-        if(flowerShop.getProductMap().get("Decoration") == 0){
+        if (flowerShop.getProductMap().get("Decoration") == 0) {
             System.out.println("There are no decoration items in stock.\n");
-        }else {
+        } else {
             int id = removerPrompt("Decoration");
             int listIndex = searchList(id, "product");
 
@@ -210,7 +210,7 @@ public class Application {
         }
     }
 
-    public static int removerPrompt(String type){
+    public static int removerPrompt(String type) {
         int idSelected;
         int productPosition;
 
@@ -219,10 +219,10 @@ public class Application {
         System.out.print("Id: ");
         idSelected = sc.nextInt();
         sc.nextLine();
-        productPosition =  searchList(idSelected,"product");
+        productPosition = searchList(idSelected, "product");
 
-        while (productPosition == -1){
-            productPosition = searchList(idSelected,"product");
+        while (productPosition == -1) {
+            productPosition = searchList(idSelected, "product");
             System.out.println("Id mismatch.\nEnter Id again: ");
             idSelected = sc.nextInt();
         }
@@ -232,14 +232,14 @@ public class Application {
 
     public static void showStockByType(String type) {
         for (int i = 0; i < flowerShop.getStockList().size(); i++) {
-            if(flowerShop.getStockList().get(i).getType().equalsIgnoreCase(type)){
+            if (flowerShop.getStockList().get(i).getType().equalsIgnoreCase(type)) {
                 System.out.println(flowerShop.getStockList().get(i).toString());
             }
         }
         System.out.println("\n");
     }
 
-    public static void addTree(){
+    public static void addTree() {
         String name = "";
         float price = 0.0f;
         float height = 0.0f;
@@ -251,12 +251,13 @@ public class Application {
         System.out.println("And it's height?");
         height = Float.parseFloat(sc.next());
         sc.nextLine();
-        Product p = productFactory.createProduct("Tree",name,price,height);
+        Product p = productFactory.createProduct("Tree", name, price, height);
         flowerShop.addStock(p);
         db.insertTree(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
-    public static void addFlower(){
+
+    public static void addFlower() {
         String name = "";
         float price = 0.0f;
         String color = "";
@@ -268,12 +269,13 @@ public class Application {
         sc.nextLine();
         System.out.println("And it's color is?");
         color = sc.nextLine();
-        Product p = productFactory.createProduct("Flower",name,price,color);
+        Product p = productFactory.createProduct("Flower", name, price, color);
         flowerShop.addStock(p);
         db.insertFlower(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
-    public static void addDecoration(){
+
+    public static void addDecoration() {
         String name = "";
         float price = 0.0f;
         int option = 0;
@@ -287,27 +289,27 @@ public class Application {
         option = sc.nextInt();
         sc.nextLine();
         isWood = option == 1;//if option == 1,isWood = true, if not is plastic
-        Product p = productFactory.createProduct("Decoration",name,price,isWood);
+        Product p = productFactory.createProduct("Decoration", name, price, isWood);
         flowerShop.addStock(p);
         db.insertDecoration(p);
         System.out.println("The item '" + p.getName() + "' was created succesfully!\n");
     }
 
-    public static void showStock(){
+    public static void showStock() {
         flowerShop.showStock();
     }
 
-    public static void startBuy(){
+    public static void startBuy() {
         int option = 1;
         int invoiceId;
         int invoicePosition;
         Invoice invoice = new Invoice();
 
         flowerShop.addInvoice(invoice);
-        invoicePosition = searchList(invoice.getId(),"invoice");
+        invoicePosition = searchList(invoice.getId(), "invoice");
         invoice = flowerShop.getInvoiceLog().get(invoicePosition);
 
-        while (option == 1){
+        while (option == 1) {
             System.out.println("Here is the product list. Type the id of the product you want to buy");
             invoice = saleLoop(invoice);
             System.out.println("Do you want to keep shopping?\nYES(1)      NO(2)       (3)[Delete product from cart]\n");
@@ -315,7 +317,7 @@ public class Application {
             option = sc.nextInt();
             sc.nextLine();
 
-            if(option == 3 && invoice.getProductList().size() > 0) {
+            if (option == 3 && invoice.getProductList().size() > 0) {
                 deleteProductFromInvoice(invoice);
                 System.out.println("Do you want to keep shopping?\nYES(1)      NO(2)       (3)[Delete product from cart]\n");
                 System.out.println("Response (numerical): ");
@@ -323,7 +325,7 @@ public class Application {
                 sc.nextLine();
             }
 
-            if(option == 3 && invoice.getProductList().size() == 0){
+            if (option == 3 && invoice.getProductList().size() == 0) {
                 System.out.println("Your shopping cart is empty\nDo you want to keep shopping?\n" +
                         "YES(1)      NO(2)\n");
                 System.out.println("Response (numerical): ");
@@ -332,46 +334,57 @@ public class Application {
             }
         }
 
-        if (invoice.getProductList().size() > 0){
+        if (invoice.getProductList().size() > 0) {
             flowerShop.setTotalEarnings(flowerShop.getTotalEarnings() + invoice.getTotalSale());
             db.insertInvoice(invoice);
             System.out.println("\nRECEIPT:");
             System.out.println(invoice.toString() + "\nInvoice archived.\n");
-        }else {
+        } else {
             flowerShop.removeInvoice(invoice);
             System.out.println("\nInvoice record deleted from InvoiceLog.\n");
         }
-
-
     }
 
-    public static Invoice saleLoop(Invoice invoice){
+    public static void buy() {
+        if (flowerShop.getStockList().size() == 0) {
+            System.out.println("There are no products in stock.\n");
+        } else {
+            startBuy();
+        }
+    }
+
+    public static Invoice saleLoop(Invoice invoice) {
         int idSelected;
         int productPosition = -1;
 
+        if (flowerShop.getStockList().size() == 0) {
+            System.out.println("There are no more products in stock.\n");
+        } else {
 
-        flowerShop.showStock();
-        System.out.print("Id: ");
-        idSelected = sc.nextInt();
-        sc.nextLine();
-        productPosition =  searchList(idSelected,"product");
-
-        while (productPosition == -1){
-            System.out.println("Id mismatch.\nEnter Id again: ");
+            flowerShop.showStock();
+            System.out.print("Id: ");
             idSelected = sc.nextInt();
             sc.nextLine();
-            productPosition = searchList(idSelected,"product");
+            productPosition = searchList(idSelected, "product");
+
+            while (productPosition == -1) {
+                System.out.println("Id mismatch.\nEnter Id again: ");
+                idSelected = sc.nextInt();
+                sc.nextLine();
+                productPosition = searchList(idSelected, "product");
+            }
+
+            invoice.addProduct(flowerShop.getStockList().get(productPosition));
+            flowerShop.removeStock(flowerShop.getStockList().get(productPosition));
+            System.out.println("Shopping cart:\n");
+            System.out.println(invoice.toString() + "\n");
+
+            return invoice;
         }
-
-        invoice.addProduct(flowerShop.getStockList().get(productPosition));
-        flowerShop.removeStock(flowerShop.getStockList().get(productPosition));
-        System.out.println("Shopping cart:\n");
-        System.out.println(invoice.toString() + "\n");
-
         return invoice;
     }
 
-    public static void deleteProductFromInvoice(Invoice invoice){
+    public static void deleteProductFromInvoice(Invoice invoice) {
         int numberSelected;
         Product p;
 
@@ -379,16 +392,16 @@ public class Application {
         System.out.print(invoice.toString() + "\nProduct number: ");
         numberSelected = sc.nextInt();
         sc.nextLine();
-        p = invoice.getProductList().get(numberSelected-1);
+        p = invoice.getProductList().get(numberSelected - 1);
         invoice.removeProduct(p);
         flowerShop.addStock(p);
         System.out.println("\n'" + p.getName() + "' was deleted succesfully.\n");
     }
 
-    public static void invoiceLog(){
-        if(flowerShop.getInvoiceLog().size() == 0){
+    public static void invoiceLog() {
+        if (flowerShop.getInvoiceLog().size() == 0) {
             System.out.println("There are no invoices archived yet.\n");
-        }else {
+        } else {
             flowerShop.showInvoiceList();
             System.out.println();
         }
