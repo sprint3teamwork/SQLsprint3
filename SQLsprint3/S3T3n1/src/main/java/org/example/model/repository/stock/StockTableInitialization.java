@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class StockTableInitialization {
 	
-	public void createTable() {
+	public static void createTable() {
 		
 		try (Connection newConnect = DatabaseConnection.getConnection()){
 			

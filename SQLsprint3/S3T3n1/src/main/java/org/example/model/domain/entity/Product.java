@@ -6,6 +6,7 @@ public class Product {
     protected String name;
     protected double price;
     protected String type;
+    protected int invoiceId;
 
     public Product(int id,String name, double price){
         this.id = id;
@@ -53,5 +54,13 @@ public class Product {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 }
