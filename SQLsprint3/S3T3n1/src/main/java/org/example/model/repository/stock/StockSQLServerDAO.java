@@ -38,7 +38,7 @@ public class StockSQLServerDAO implements StockDAO {
 	public Product checkTypeRS(ResultSet rs, Product p) throws SQLException {
 		
 		String type = rs.getString(4);
-		//p.setInvoiceId(rs.getInt(8));	need this variable		//or string param invoice_id
+		p.setInvoiceId(rs.getInt(8));	//need this variable		//or string param invoice_id
 		
 		switch(type) {
 		case "Tree": p = new Tree(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getFloat(5));
@@ -60,6 +60,7 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
         ps.setString(2, p.getName());
         ps.setDouble(3, p.getPrice());
         ps.setString(4, p.getType());
+        ps.setInt(8, p.getInvoiceId());
         
         switch(p.getType()) {
         	case "Tree": Tree tree = (Tree) p; 
@@ -100,8 +101,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
 			}				
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -122,9 +123,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 			
 			p = checkTypeRS(rs,p);
 			
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return p;
 	}
 
@@ -147,8 +148,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -172,8 +173,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -197,8 +198,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -222,8 +223,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -247,8 +248,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -272,8 +273,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -294,9 +295,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
             System.out.println("Product with following details was saved in DB: " + product.toString());
 			
             return true;
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return false;
 	}
 
@@ -316,9 +317,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
             System.out.println("User with id " + product.getId() + " was updated in DB with following details: " + product.toString());
 
             return true;
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return false;
 	}
 
@@ -335,9 +336,10 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
             System.out.println("Product with id: " + id + " was sucesfully deleted from DB.");
 			
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}return false;
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+		return false;
 	}
 
 }
