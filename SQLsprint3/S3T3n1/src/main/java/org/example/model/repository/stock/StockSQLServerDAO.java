@@ -1,4 +1,4 @@
-package org.example.model.repository.stock;
+package org.example.model.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,27 +7,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.model.domain.entity.Decoration;
-import org.example.model.domain.entity.Flower;
-import org.example.model.domain.entity.Product;
-import org.example.model.domain.entity.Tree;
-import org.example.model.repository.DatabaseConnection;
-import org.example.model.repository.interfaces.StockDAO;
+import org.example.model.domain.Decoration;
+import org.example.model.domain.Flower;
+import org.example.model.domain.Product;
+import org.example.model.domain.Tree;
 
 public class StockSQLServerDAO implements StockDAO {
 	
 	/*saw this on: https://coderanch.com/t/646858/databases/implement-DAO-update-method
 	 * that way a local variable isnt created everytime and its easier to change later on.
-	 * 
-	 * 
 	 * private static final String AUTHENTICATE = "SELECT * FROM users WHERE email=? and password=?";
-    private static final String DELETE = "DELETE FROM users WHERE id=?";
     private static final String TRUNCATE = "TRUNCATE users";
-    private static final String FIND_BY_ID = "SELECT * FROM users WHERE id=?";
-    private static final String FIND_ALL = "SELECT * FROM users ORDER BY id";
-    private static final String INSERT = "INSERT INTO users (id, firstName, lastName, joinDate, cardId, email, password, phoneNumber, accountType, location) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = "UPDATE users SET firstName=?, lastName=?, joinDate=?, cardId=?, email=?, password=?, phoneNumber=?, accountType=?, location=? WHERE id=?";
 	 */
+	private static final String FIND_ALL = "SELECT * FROM stockList"; 
+	private static final String FIND_BY_ID = "SELECT * FROM stockList WHERE id=?";
+	private static final String FIND_BY_NAME = "SELECT * FROM stockList WHERE name=?";
+	private static final String FIND_BY_PRICE = "SELECT * FROM stockList WHERE price=?";
+	private static final String FIND_BY_TYPE = "SELECT * FROM stockList WHERE type=?";
+	private static final String FIND_BY_HEIGHT = "SELECT * FROM stockList WHERE height=?";
+	private static final String FIND_BY_COLOR = "SELECT * FROM stockList WHERE color=?";
+	private static final String FIND_BY_MATERIAL = "SELECT * FROM stockList WHERE material_is_wood=?";
+    private static final String INSERT = "INSERT INTO stockList (product_id, name, price,"
+    + "type, height, color, material_is_wood, invoice_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE stockList SET product_id=?, name=?, price=?, "
+    + "type=?, height=?, color=?, material_is_wood=?, invoice_id=? WHERE product_id=?";
+    private static final String DELETE = "DELETE FROM stockList WHERE product_id=?";
 	
 	public Product checkTypeRS(ResultSet rs, Product p) throws SQLException {
 		
@@ -76,15 +80,14 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 	//this method needed to add all products on first connection?
 	//also is another constructor needed to include the invoiceID?
 	//flowershop needed to receive addstock and removestock methods?
+	//using FIND_ALL static variable from above on line 83 from 24
 	@Override
 	public List<Product> findAll() {
 		
 		List<Product> stockList = new ArrayList();
 		
-		String prompt = "SELECT * FROM stockList;";
-		
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_ALL);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -101,15 +104,15 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 		return stockList;
 	}
 
+	//using FINDBYID static variable
 	@Override
 	public Product findById(int id) {
 		
 		Product p = new Product();
 		p.setId(id);
 		
-		String prompt = "SELECT * FROM stockList where id = " + id + ";";
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_ID);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -128,10 +131,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 		
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where name = " + name + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_NAME);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -155,10 +156,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where price = " + price + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_PRICE);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -182,10 +181,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where type = " + productType + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_TYPE);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -209,10 +206,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where height = " + height + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_HEIGHT);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -236,10 +231,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where height = " + color + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_COLOR);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -263,10 +256,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 		
 		List<Product> stockList = new ArrayList();
 
-		String prompt = "SELECT * FROM stockList where material_is_wood = " + material + ";";
-
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(FIND_BY_MATERIAL);
 			ResultSet rs = ps.executeQuery()
 			) {
 			
@@ -288,11 +279,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 	@Override
 	public boolean insertProduct(Product p) {
 	
-		String prompt = "INSERT INTO stockList (product_id, name, price, "
-				+ "type, height, color, material_is_wood, invoice_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(INSERT);
 			) {
 			
 			Product product = checkTypePS(ps, p);
@@ -313,9 +301,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 	@Override
 	public boolean updateProduct(Product p) {
 		
-		String prompt = "UPDATE stockList SET product_id=?, name=?, price=?, type=?, height=?, color=?, material_is_wood=?, invoice_id=? WHERE product_id=?";
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(UPDATE);
 			) {
 			
 			Product product = checkTypePS(ps, p);
@@ -335,9 +322,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
 	@Override
 	public boolean deleteProduct(int id) {
-		String prompt = "DELETE FROM stockList WHERE product_id=?";
+		
 		try(Connection newConnect = DatabaseConnection.getConnection();
-			PreparedStatement ps = newConnect.prepareStatement(prompt);
+			PreparedStatement ps = newConnect.prepareStatement(DELETE);
 			) {
 			
 			ps.setInt(1, id);
