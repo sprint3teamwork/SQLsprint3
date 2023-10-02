@@ -60,13 +60,7 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
         ps.setString(2, p.getName());
         ps.setDouble(3, p.getPrice());
         ps.setString(4, p.getType());
-
-		if(p.getInvoiceId() == 0){
-			ps.setInt(8,0);
-		}else{
-			ps.setInt(8,p.getInvoiceId());
-		}
-
+        ps.setInt(8, p.getInvoiceId());
         
         switch(p.getType()) {
         	case "Tree": Tree tree = (Tree) p; 
@@ -109,8 +103,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.setStockValue += p.getprice when?
 				//flowerShopp.putProductMap put.p
 			}				
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -131,9 +125,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 			
 			p = checkTypeRS(rs,p);
 			
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return p;
 	}
 
@@ -156,8 +150,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -181,8 +175,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -206,8 +200,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -231,8 +225,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -256,8 +250,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -281,8 +275,8 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 				//flowerShopp.putProductMap put.p
 			}
 			
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} 
 		return stockList;
 	}
@@ -301,9 +295,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
             System.out.println("Product with following details was saved in DB: " + product.toString());
 			
             return true;
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return false;
 	}
 
@@ -323,9 +317,9 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
             System.out.println("User with id " + product.getId() + " was updated in DB with following details: " + product.toString());
 
             return true;
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
 		return false;
 	}
 
@@ -342,9 +336,10 @@ public Product checkTypePS(PreparedStatement ps, Product p) throws SQLException 
 
             System.out.println("Product with id: " + id + " was sucesfully deleted from DB.");
 			
-		}catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}return false;
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+		return false;
 	}
 
 }
