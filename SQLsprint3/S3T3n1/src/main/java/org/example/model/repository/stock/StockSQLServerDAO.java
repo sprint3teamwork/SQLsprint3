@@ -1,4 +1,4 @@
-package org.example.model.repository;
+package org.example.model.repository.stock;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.model.domain.Decoration;
-import org.example.model.domain.Flower;
-import org.example.model.domain.Product;
-import org.example.model.domain.Tree;
+import org.example.model.domain.entity.Decoration;
+import org.example.model.domain.entity.Flower;
+import org.example.model.domain.entity.Product;
+import org.example.model.domain.entity.Tree;
+import org.example.model.repository.DatabaseConnection;
+import org.example.model.repository.interfaces.StockDAO;
 
 public class StockSQLServerDAO implements StockDAO {
 	

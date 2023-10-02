@@ -11,7 +11,7 @@ public class DatabaseConnection {
     private static Properties properties = new Properties();
 
     static {
-        try (FileInputStream inputStream = new FileInputStream("application.properties")) {
+        try (FileInputStream inputStream = new FileInputStream("SQLsprint3\\S3T3n1\\src\\main\\resources\\application.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
