@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class InvoicesTableInitialization {
-    public static void createTables() {
+    public static void createTable() {
         try (Connection connection = DatabaseConnection.getConnection()){
             String createInvoiceTableSQL = "CREATE SCHEMA IF NOT EXISTS `flowerShop` "
                     + "DEFAULT CHARACTER SET utf8 ;"
