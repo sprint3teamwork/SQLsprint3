@@ -21,6 +21,7 @@ public class Invoice {
 	public Invoice(int id, double totalSale){
 		this.id = id;
 		this.totalSale = totalSale;
+		idNextNumber = id +1;
 		this.productList = new ArrayList();
 	}
 

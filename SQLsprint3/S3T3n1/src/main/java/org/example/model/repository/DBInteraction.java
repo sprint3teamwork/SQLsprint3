@@ -102,7 +102,7 @@ public class DBInteraction implements org.example.model.repository.interfaces.DB
 
     @Override
     public void tablesInitializer() {
-        StockTableInitialization.createTable();
         InvoicesTableInitialization.createTable();
+        StockTableInitialization.createTable();
     }
 }
