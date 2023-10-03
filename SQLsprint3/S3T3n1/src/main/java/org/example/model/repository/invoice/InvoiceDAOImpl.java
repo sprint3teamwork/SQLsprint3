@@ -19,9 +19,9 @@ public class InvoiceDAOImpl implements InvoiceDAO {
             statement.executeUpdate();
 
             // Insert associated products
-            for (Product product : invoice.getProductList()) {
+           /* for (Product product : invoice.getProductList()) {
                 product.setInvoiceId(invoice.getId());
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,7 +49,18 @@ public class InvoiceDAOImpl implements InvoiceDAO {
         }
 
         return invoceLog;
+    }
 
+    public void updateInvoice(Invoice invoice) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String updateInvoiceSQL = "UPDATE `flowershop`.`invoices` SET Total_Sale = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(updateInvoiceSQL);
+            statement.setDouble(1, invoice.getTotalSale());
+            statement.setInt(2, invoice.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

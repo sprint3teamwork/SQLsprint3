@@ -105,4 +105,13 @@ public class DBInteraction implements org.example.model.repository.interfaces.DB
         InvoicesTableInitialization.createTable();
         StockTableInitialization.createTable();
     }
+
+    @Override
+    public void updateProduct(Product product) {
+        stockDAO.updateProduct(product);
+    }
+
+    public void updateInvocie(Invoice invoice){
+        invoiceDAO.updateInvoice(invoice);
+    }
 }

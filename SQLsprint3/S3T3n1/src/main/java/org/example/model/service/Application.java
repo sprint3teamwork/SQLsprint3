@@ -304,6 +304,7 @@ public class Application {
         int invoiceId;
         int invoicePosition;
         Invoice invoice = new Invoice();
+        db.insertInvoice(invoice);
 
         flowerShop.addInvoice(invoice);
         invoicePosition = searchList(invoice.getId(), "invoice");
@@ -336,7 +337,7 @@ public class Application {
 
         if (invoice.getProductList().size() > 0) {
             flowerShop.setTotalEarnings(flowerShop.getTotalEarnings() + invoice.getTotalSale());
-            db.insertInvoice(invoice);
+            db.updateInvocie(invoice);
             System.out.println("\nRECEIPT:");
             System.out.println(invoice.toString() + "\nInvoice archived.\n");
         } else {
@@ -375,6 +376,8 @@ public class Application {
             }
 
             invoice.addProduct(flowerShop.getStockList().get(productPosition));
+            flowerShop.getStockList().get(productPosition).setInvoiceId(invoice.getId());//set invoice_id to product
+            db.updateProduct(flowerShop.getStockList().get(productPosition));//update product on SQL table
             flowerShop.removeStock(flowerShop.getStockList().get(productPosition));
             System.out.println("Shopping cart:\n");
             System.out.println(invoice.toString() + "\n");
