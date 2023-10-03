@@ -13,4 +13,5 @@ public interface InvoiceDAO {
     static List<Invoice> invoicesRetriever() {
         return null;
     }
+    void updateInvoice(Invoice invoice);
 }
