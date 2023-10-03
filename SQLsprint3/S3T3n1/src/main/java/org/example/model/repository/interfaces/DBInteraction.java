@@ -26,5 +26,6 @@ public interface DBInteraction {
      Map<String,Integer> getProductMapData();//finByType.size for every value or load stocklist in flowershop for totalEranings etc.
      void insertInvoice(Invoice invoice);
      void tablesInitializer();
+     void updateProduct(Product product);
 
 }
