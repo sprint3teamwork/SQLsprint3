@@ -17,6 +17,10 @@ public class Tree extends Product {
         this.height = height;
     }
 
+    public Tree() {
+
+    }
+
     public float getHeight() {
         return height;
     }
