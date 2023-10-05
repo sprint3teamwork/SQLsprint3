@@ -124,7 +124,7 @@ public class StockSQLServerDAO implements StockDAO {
     @Override
     public Product findById(int id) {
 
-        Product p = new Product();
+        Tree p = new Tree();//This is dirty code
         p.setId(id);
 
         try (Connection newConnect = DatabaseConnection.getConnection();
@@ -134,7 +134,7 @@ public class StockSQLServerDAO implements StockDAO {
 
             rs.next();
 
-            p = checkTypeRS(rs, p);
+             p = (Tree) checkTypeRS(rs, (Product) p);//This is dirty code
 
         } catch (SQLException e) {// | ClassNotFoundException e) {
             e.printStackTrace();
