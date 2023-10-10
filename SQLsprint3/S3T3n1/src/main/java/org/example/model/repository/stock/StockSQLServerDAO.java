@@ -85,7 +85,11 @@ public class StockSQLServerDAO implements StockDAO {
                 Decoration decoration = (Decoration) p;
                 ps.setFloat(5, 0f);
                 ps.setString(6, null);
-                ps.setBoolean(7, decoration.isMaterialIsWood());
+                if (!decoration.isMaterialIsWood()) {
+                    ps.setString(7, "false");
+                } else {
+                    ps.setBoolean(7, decoration.isMaterialIsWood());
+                }
                 product = decoration;
                 break;
         }
